@@ -1,0 +1,400 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --the-darkest-color: #212529;
+    --darker-color: #343A40;
+    --dark-color: #495057;
+    --false-color: #212529;
+    --true-color: #7fff00;
+    --white-font-color: #DEE2E6;
+    --white-button: #F8F9FA;
+    --frame-color: #6C757D;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    user-select: none;
+    overflow: hidden;
+    color: var(--the-darkest-color);
+}
+
+button {
+    cursor: pointer;
+    background-color: var(--white-button);
+    border: none;
+    font-size: 16px;
+}
+
+.big-button {
+    width: 40px;
+    height: 40px;
+}
+
+.vertical-button {
+    width: 90px;
+    height: 30px;
+}
+
+button[type=submit] {
+    font-weight: bold;
+    height: 50px;
+}
+
+.project-button-con {
+    display: flex;
+    gap: 10px;
+}
+
+div.start-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 30px;
+    gap: 30px;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    z-index: 101;
+    background-color: var(--the-darkest-color);
+    color: var(--white-font-color);
+}
+
+header.start-menu {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header.start-menu div.place {
+    width: 50px;
+}
+
+header.start-menu h1 {
+    text-align: center;
+}
+
+#menu-button-con {
+    width: 50px;
+}
+
+#projects-list {
+    height: 80%;
+    width: 80%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 300px);
+    grid-auto-rows: 150px;
+    justify-content: center;
+    gap: 30px;
+    overflow: auto;
+    padding-bottom: 30px;
+}
+
+.project-con {
+    width: 300px;
+    height: 150px;
+    background-color: var(--dark-color);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+main {
+    width: 100%;
+    display: flex;
+    position: relative;
+    flex-grow: 1;
+    overflow: hidden;
+    background-color: var(--darker-color);
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--the-darkest-color);
+    overflow: auto;
+}
+
+header.app {
+    display: flex;
+    padding-left: 10px;
+    padding-right: 10px;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    background-color: var(--the-darkest-color);
+}
+
+.gate {
+    width: 130px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: space-between;
+    padding: 6px;
+    font-weight: bold;
+}
+
+.gate p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.work.selected {
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.89), -3px -3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.work {
+    position: absolute;
+    z-index: 1;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.outputs {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.output,
+.input {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.draggable-gate .output,
+.draggable-gate .input {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+
+.draggable-gate .output::after,
+.draggable-gate .input::after {
+    content: "1";
+    color: var(--the-darkest-color);
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.work .input {
+    transform: translateX(-40px);
+}
+
+
+
+.work .input::after {
+    content: "";
+    display: block;
+    width: 9px;
+    height: 3px;
+    background-color: var(--the-darkest-color);
+    position: relative;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 25px;
+}
+
+.work .output::before {
+    content: "";
+    display: block;
+    width: 9px;
+    height: 3px;
+    background-color: var(--the-darkest-color);
+    position: relative;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    right: 5px;
+}
+
+.work .output {
+    transform: translateX(40px);
+}
+
+.true {
+    background-color: var(--true-color);
+}
+
+.false {
+    background-color: var(--false-color);
+}
+
+svg {
+    position: absolute;
+    pointer-events: none;
+}
+
+path {
+    fill: none;
+    stroke: var(--false-color);
+    stroke-width: 5;
+    stroke-linejoin: round;
+    cursor: pointer;
+    pointer-events: initial;
+}
+
+path.true {
+    stroke: var(--true-color);
+}
+
+path.false {
+    stroke: var(--false-color);
+}
+
+path.selected {
+    filter: drop-shadow( 0px 2px 3px rgba(0, 0, 0, 0.747));
+}
+
+#work-area {
+    width: 1920px;
+    height: 1080px;
+    position: absolute;
+    background-color: var(--dark-color);
+}
+
+.hide {
+    z-index: -1;
+}
+
+.outputs-element {
+    background-color: #F45B69;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.inputs-element {
+    background-color: #CED0CE;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.n-outputs-element,
+.n-inputs-element {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.n-outputs-element {
+    background-color: #F45B69;
+}
+
+.n-inputs-element {
+    background-color: #CED0CE;
+}
+
+.n-inputs-element h2,
+.n-outputs-element h2 {
+    color: var(--the-darkest-color);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.n-inputs-element button,
+.n-outputs-element button {
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--dark-color);
+    border-radius: 50%;
+    margin-bottom: 7px;
+}
+
+.draggable-gate .inputs,
+.draggable-gate .outputs {
+    display: none;
+}
+
+.draggable-gate button {
+    margin-left: 2px;
+    border-radius: 50%;
+    border: 1px solid var(--dark-color);
+    width: 25px;
+    height: 25px;
+    flex-shrink: 0;
+}
+
+.gate.draggable-gate {
+    justify-content: center;
+}
+
+.edit {
+    border-color: white;
+}
+
+.correct {
+    background-color: hotpink;
+}
+
+#button-con {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+#button-con button {
+    position: relative;
+    padding: 10px;
+    z-index: 100;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+}
+
+.blured {
+    filter: blur(1px);
+}
+
+.project-con h2 {
+    text-align: center;
+    overflow: auto;
+    width: 240px;
+}
+
+.close-frame {
+    align-self: flex-end;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+}
+
+form {
+    display: none;
+    z-index: 102;
+    position: absolute;
+    gap: 20px;
+    flex-direction: column;
+    background-color: var(--frame-color);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    width: 340px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.322), -5px -5px 10px rgba(0, 0, 0, 0.322);
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+    <html lang="pl-PL">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="./style.css">
+        <title>Logic Gates Simulator</title>
+    </head>
+    <body>
+        <div class="start-menu">
+            <header class="start-menu">
+                <div class="place"></div>
+                <h1>Logic Gates Simulator</h1>
+                <div id="menu-button-con">
+                    <button id="open-create-project-menu" class="big-button" title="add project"><img src="./icons/add.svg"></button>
+                </div>
+            </header>
+            <h2>My projects</h2>
+            <div id="projects-list"></div>
+        </div>
+        <form class="create-project-menu">
+                <button type="button" class="close-frame"><img src="./icons/close.svg"></button>
+                <div>
+                    <label for="project-name">Project name:</label>
+                    <input type="text" id="project-name" autocomplete="off">
+                </div>
+                <button type="submit" id="create-project">CREATE PROJECT</button>
+        </form>
+        <header class="app">
+            <button id="create-gate-menu-button" class="vertical-button">create gate</button>
+            <button id="delete-button" class="vertical-button">delete</button>
+            <button id="menu" class="vertical-button" onclick="location.reload()">menu</button>
+        </header>
+        <main>
+            <div id="work-area"></div>
+            <div id="button-con">
+                <button id="minus" class="big-button">-</button>
+                <button id="plus" class="big-button">+</button>
+            </div>
+        </main>
+        <footer></footer>
+        <form id="create-block-menu">
+            <button type="button" class="close-frame"><img src="./icons/close.svg"></button>
+            <div>
+                <label for="color">Color:</label>
+                <input type="color" name="color" id="color">
+            </div>
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" name="name" id="name" autocomplete="off">
+            </div>
+            <button type="submit" id="create-gate-button">CREATE GATE</button>
+        </form>
+        <script type="module" src="./main.js"></script>
+    </body>
+</html>
