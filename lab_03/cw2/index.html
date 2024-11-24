@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator haseł</title>
+</head>
+<body>
+    <h2>Generator haseł</h2>
+    <label for="minLength">Minimalna długość hasła:</label>
+    <input type="number" id="minLength" min="1" placeholder="Min. długość"><br><br>
+
+    <label for="maxLength">Maksymalna długość hasła:</label>
+    <input type="number" id="maxLength" min="1" placeholder="Max. długość"><br><br>
+
+    <label for="includeUppercase">Czy hasło ma zawierać wielkie litery?</label>
+    <input type="checkbox" id="includeUppercase"><br><br>
+
+    <label for="includeSpecialChars">Czy hasło ma zawierać znaki specjalne?</label>
+    <input type="checkbox" id="includeSpecialChars"><br><br>
+
+    <button onclick="generatePassword()">Wygeneruj hasło</button>
+
+    <script>
+        function generatePassword() {
+            const minLength = parseInt(document.getElementById('minLength').value) || 0;
+            const maxLength = parseInt(document.getElementById('maxLength').value) || 0;
+            const includeUppercase = document.getElementById('includeUppercase').checked;
+            const includeSpecialChars = document.getElementById('includeSpecialChars').checked;
+
+            if (minLength <= 0 || maxLength <= 0 || minLength > maxLength) {
+                alert('Podaj poprawne wartości dla minimalnej i maksymalnej długości hasła.');
+                return;
+            }
+
+            const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+            const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const specialChars = '!@#$%^&*()_+[]{}<>?';
+            const digits = '0123456789';
+
+            // Dodanie grup znaków na podstawie opcji
+            let characters = lowercaseChars + digits;
+            const requiredChars = [];
+
+            if (includeUppercase) {
+                characters += uppercaseChars;
+                requiredChars.push(uppercaseChars[Math.floor(Math.random() * uppercaseChars.length)]);
+            }
+            if (includeSpecialChars) {
+                characters += specialChars;
+                requiredChars.push(specialChars[Math.floor(Math.random() * specialChars.length)]);
+            }
+
+            const passwordLength = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+            let password = '';
+
+            for (let i = 0; i < passwordLength - requiredChars.length; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                password += characters[randomIndex];
+            }
+
+            // Dodaj wymagane znaki do hasła i je przetasuj
+            password += requiredChars.join('');
+            password = password.split('').sort(() => Math.random() - 0.5).join('');
+
+            alert('Wygenerowane hasło: ' + password);
+        }
+    </script>
+</body>
+</html>

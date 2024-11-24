@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DummyJSON Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .controls {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        input, select {
+            padding: 8px;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        img {
+            max-width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Product List</h1>
+    <div class="controls">
+        <input type="text" id="filterInput" placeholder="Filter by title or description">
+        <select id="sortSelect">
+            <option value="original">Original Order</option>
+            <option value="asc">Sort A-Z</option>
+            <option value="desc">Sort Z-A</option>
+        </select>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody id="productTable">
+            <!-- Data will be injected here -->
+        </tbody>
+    </table>
+
+    <script>
+        const filterInput = document.getElementById('filterInput');
+        const sortSelect = document.getElementById('sortSelect');
+        const productTable = document.getElementById('productTable');
+
+        let products = []; // Global array to hold products
+        let displayedProducts = []; // Array to hold filtered and sorted data
+
+        // Fetch data from the API
+        async function fetchData() {
+            try {
+                const response = await fetch('https://dummyjson.com/products');
+                const data = await response.json();
+                products = data.products.slice(0, 30); // Limit to the first 30 items
+                c = 0;
+                products.map(products => {
+                    products.id = c++
+                });
+                displayedProducts = [...products]; // Clone the original order
+                renderTable(displayedProducts);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Render table
+        function renderTable(data) {
+            productTable.innerHTML = data.map(product => `
+                <tr>
+                    <td><img src="${product.thumbnail}" alt="${product.title}"></td>
+                    <td>${product.title}</td>
+                    <td>${product.description}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Filter products
+        function filterProducts() {
+            const query = filterInput.value.toLowerCase();
+            displayedProducts = products.filter(product =>
+                product.title.toLowerCase().includes(query) ||
+                product.description.toLowerCase().includes(query)
+            );
+            sortProducts();
+        }
+
+        // Sort products
+        function sortProducts() {
+            const sortOption = sortSelect.value;
+            if (sortOption === 'asc') {
+                displayedProducts.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (sortOption === 'desc') {
+                displayedProducts.sort((a, b) => b.title.localeCompare(a.title));
+            } else {
+                displayedProducts.sort((a, b) => a.id - b.id ); // Reset to original order
+            }
+            renderTable(displayedProducts);
+        }
+
+        // Event listeners
+        filterInput.addEventListener('input', filterProducts);
+        sortSelect.addEventListener('change', sortProducts);
+
+        // Fetch data on load
+        fetchData();
+    </script>
+</body>
+</html>

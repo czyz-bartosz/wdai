@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <span id="timer-display"></span>
+    <button id="start-btn">start</button>
+    <button id="stop-btn">stop</button>
+    <button id="reset-btn">reset</button>
+    <script>
+        function getCurrentSeconds() {
+            return Math.floor(new Date().getTime() / 1000);
+        }
+
+        function startTimer() {
+            if(isStarted == true) {
+                return;
+            }
+            isStarted = true;
+            if(startTime == null) {
+                startTime = getCurrentSeconds();
+                stopTime = startTime;
+            }
+            const currentTime = getCurrentSeconds();
+            const diff = currentTime - stopTime;
+            startTime += diff;
+            timerLoop = setInterval(() => {displayTime(startTime)}, 100);
+        }
+
+        function stopTimer() {
+            if(isStarted == false) {
+                return;
+            }
+            if(timerLoop == null) {
+                return;
+            }
+            isStarted = false;
+            stopTime = getCurrentSeconds();
+            clearInterval(timerLoop);
+        }
+
+        function resetTimer() {
+            stopTimer();
+            startTime = null;
+            displayTime(startTime);
+        }
+
+        function getMinutesFromSeconds(seconds) {
+            return Math.floor( seconds / 60 );
+        }
+
+        function getSecondsOverflow(seconds) {
+            return seconds % 60;
+        }
+
+        function displayTime(startTime) {
+            const timerDisplay = document.querySelector('#timer-display');
+
+            if(startTime == null) {
+                timerDisplay.textContent = `0s`;
+                return;
+            }
+
+            const currentTime = getCurrentSeconds();
+            const diff = currentTime - startTime;
+            const minutes = getMinutesFromSeconds(diff);
+            const seconds = getSecondsOverflow(diff);
+
+            if(minutes == 0) {
+                timerDisplay.textContent = `${seconds}s`;
+                return;
+            }
+
+            timerDisplay.textContent = `${minutes}min ${seconds}s`;
+        }
+
+        let startTime = null;
+        let stopTime = null;
+        let timerLoop = null;
+        let isStarted = false;
+        const startBtn = document.querySelector('#start-btn');
+        const stopBtn = document.querySelector('#stop-btn');
+        const resetBtn = document.querySelector('#reset-btn');
+        startBtn.addEventListener('click', startTimer);
+        stopBtn.addEventListener('click', stopTimer);
+        resetBtn.addEventListener('click', resetTimer);
+        displayTime(startTime);
+    </script>
+</body>
+</html>
