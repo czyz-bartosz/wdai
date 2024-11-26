@@ -1,0 +1,115 @@
+{
+    "info": {
+      "name": "API Orders Testing",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Get Orders for User",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3001/api/orders/:userId",
+            "host": ["http://localhost"],
+            "port": "3001",
+            "path": ["api", "orders", ":userId"],
+            "variable": [
+              {
+                "key": "userId",
+                "value": "1"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Add Order",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer YOUR_TOKEN",
+              "type": "text"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"userId\": 1,\n  \"bookId\": 101,\n  \"quantity\": 2\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3001/api/orders",
+            "host": ["http://localhost"],
+            "port": "3001",
+            "path": ["api", "orders"]
+          }
+        }
+      },
+      {
+        "name": "Delete Order",
+        "request": {
+          "method": "DELETE",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer YOUR_TOKEN",
+              "type": "text"
+            }
+          ],
+          "url": {
+            "raw": "http://localhost:3001/api/orders/:orderId",
+            "host": ["http://localhost"],
+            "port": "3001",
+            "path": ["api", "orders", ":orderId"],
+            "variable": [
+              {
+                "key": "orderId",
+                "value": "1"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Update Order Quantity",
+        "request": {
+          "method": "PATCH",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer YOUR_TOKEN",
+              "type": "text"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"quantity\": 3\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3001/api/orders/:orderId",
+            "host": ["http://localhost"],
+            "port": "3001",
+            "path": ["api", "orders", ":orderId"],
+            "variable": [
+              {
+                "key": "orderId",
+                "value": "1"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+  

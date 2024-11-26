@@ -4,7 +4,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const dbName = 'database';
-const port = 3000;
+const port = 3002;
+const secretKey = 'secret';
 
 // Tworzymy połączenie z bazą danych SQLite
 const sequelize = new Sequelize({
@@ -75,7 +76,7 @@ app.use(express.json());
 
 // Funkcja do generowania JWT
 const generateToken = (userId) => {
-  return jwt.sign({ userId }, 'secret_key', { expiresIn: '1h' });
+  return jwt.sign({ userId }, secretKey, { expiresIn: '1h' });
 };
 
 // Middleware do weryfikacji JWT
@@ -85,7 +86,7 @@ const verifyToken = (req, res, next) => {
     return res.status(401).json({ error: 'Brak tokenu autoryzacyjnego' });
   }
 
-  jwt.verify(token, 'secret_key', (err, decoded) => {
+  jwt.verify(token, secretKey, (err, decoded) => {
     if (err) {
       return res.status(401).json({ error: 'Nieprawidłowy token' });
     }
@@ -144,53 +145,6 @@ app.post('/api/login', async (req, res) => {
     const token = generateToken(user.id);
 
     res.json({ userId: user.id, token });
-  } catch (error) {
-    res.status(500).json({ error: 'Błąd serwera' });
-  }
-});
-
-// Pobieranie zamówień użytkownika
-app.get('/api/orders/:userId', verifyToken, async (req, res) => {
-  const { userId } = req.params;
-  if (parseInt(userId) !== req.userId) {
-    return res.status(403).json({ error: 'Brak uprawnień do pobrania tych zamówień' });
-  }
-
-  try {
-    const orders = await Order.findAll({ where: { userId } });
-    res.json(orders);
-  } catch (error) {
-    res.status(500).json({ error: 'Błąd serwera' });
-  }
-});
-
-// Dodawanie zamówienia (tylko dla zalogowanych)
-app.post('/api/orders', verifyToken, async (req, res) => {
-  const { userId, bookId, quantity } = req.body;
-  if (userId !== req.userId) {
-    return res.status(403).json({ error: 'Brak uprawnień do dodania zamówienia' });
-  }
-  try {
-    const newOrder = await Order.create({ userId, bookId, quantity });
-    res.status(201).json({ orderId: newOrder.id });
-  } catch (error) {
-    res.status(500).json({ error: 'Błąd serwera' });
-  }
-});
-
-// Usuwanie zamówienia (tylko dla zalogowanych)
-app.delete('/api/orders/:orderId', verifyToken, async (req, res) => {
-  const { orderId } = req.params;
-  try {
-    const order = await Order.findByPk(orderId);
-    if (!order) {
-      return res.status(404).json({ error: 'Zamówienie nie znalezione' });
-    }
-    if (order.userId !== req.userId) {
-      return res.status(403).json({ error: 'Brak uprawnień do usunięcia tego zamówienia' });
-    }
-    await order.destroy();
-    res.status(204).send(); // Status 204 oznacza, że usunięto obiekt
   } catch (error) {
     res.status(500).json({ error: 'Błąd serwera' });
   }

@@ -2,7 +2,8 @@ import express from 'express';
 import { Sequelize, DataTypes } from 'sequelize';
 
 const dbName = 'database';
-const port = 3000;
+const port = 3001;
+const authServer = 'http://localhost:3002/api/verify';
 
 // Tworzymy połączenie z bazą danych SQLite
 const sequelize = new Sequelize({
@@ -53,6 +54,36 @@ sequelize.sync()
 const app = express();
 app.use(express.json());
 
+async function verifyTokenMiddleware(req, res, next) {
+  const token = req.headers['authorization'];
+
+  if (!token) {
+      return res.status(401).json({ error: 'Brak tokenu autoryzacyjnego' });
+  }
+
+  console.log(token);
+
+  try {
+      // Wyślij zapytanie do serwera weryfikującego token
+      const response = await fetch(authServer, {
+          method: 'GET',
+          headers: {
+              'Authorization': token
+          },
+      });
+
+      // Sprawdź, czy serwer odpowiedział poprawnie
+      if (!response.ok) {
+          throw new Error('Błąd podczas weryfikacji tokenu');
+      }
+      
+      return next();
+  } catch (error) {
+      console.error('Błąd:', error.message);
+      res.status(500).json({ error: 'Błąd serwera podczas weryfikacji tokenu' });
+  }
+}
+
 // Pobieranie wszystkich zamówień dla użytkownika
 app.get('/api/orders/:userId', async (req, res) => {
   const { userId } = req.params;
@@ -65,7 +96,7 @@ app.get('/api/orders/:userId', async (req, res) => {
 });
 
 // Dodawanie zamówienia
-app.post('/api/orders', async (req, res) => {
+app.post('/api/orders', verifyTokenMiddleware, async (req, res) => {
   const { userId, bookId, quantity } = req.body;
   try {
     // Sprawdzamy, czy bookId i quantity są poprawne
@@ -82,7 +113,7 @@ app.post('/api/orders', async (req, res) => {
 });
 
 // Usuwanie zamówienia
-app.delete('/api/orders/:orderId', async (req, res) => {
+app.delete('/api/orders/:orderId', verifyTokenMiddleware, async (req, res) => {
   const { orderId } = req.params;
   try {
     const order = await Order.findByPk(orderId);
@@ -97,7 +128,7 @@ app.delete('/api/orders/:orderId', async (req, res) => {
 });
 
 // Aktualizowanie zamówienia (np. zmiana ilości)
-app.patch('/api/orders/:orderId', async (req, res) => {
+app.patch('/api/orders/:orderId', verifyTokenMiddleware, async (req, res) => {
   const { orderId } = req.params;
   const { quantity } = req.body; // Możliwość zmiany tylko ilości
   try {

@@ -3,6 +3,7 @@ import { Sequelize, DataTypes } from 'sequelize';
 
 const dbName = 'database';
 const port = 3000;
+const authServer = 'http://localhost:3002/api/verify';
 
 // Tworzymy połączenie z bazą danych SQLite
 const sequelize = new Sequelize({
@@ -49,6 +50,36 @@ sequelize.sync()
 const app = express();
 app.use(express.json());
 
+async function verifyTokenMiddleware(req, res, next) {
+  const token = req.headers['authorization'];
+
+  if (!token) {
+      return res.status(401).json({ error: 'Brak tokenu autoryzacyjnego' });
+  }
+
+  console.log(token);
+
+  try {
+      // Wyślij zapytanie do serwera weryfikującego token
+      const response = await fetch(authServer, {
+          method: 'GET',
+          headers: {
+              'Authorization': token
+          },
+      });
+
+      // Sprawdź, czy serwer odpowiedział poprawnie
+      if (!response.ok) {
+          throw new Error('Błąd podczas weryfikacji tokenu');
+      }
+      
+      return next();
+  } catch (error) {
+      console.error('Błąd:', error.message);
+      res.status(500).json({ error: 'Błąd serwera podczas weryfikacji tokenu' });
+  }
+}
+
 // Pobieranie wszystkich książek
 app.get('/api/books', async (req, res) => {
     try {
@@ -74,7 +105,7 @@ app.get('/api/books', async (req, res) => {
   });
   
   // Dodawanie nowej książki
-  app.post('/api/books', async (req, res) => {
+  app.post('/api/books', verifyTokenMiddleware, async (req, res) => {
     const { title, author, year } = req.body;
     try {
       const newBook = await Book.create({ title, author, year });
@@ -85,7 +116,7 @@ app.get('/api/books', async (req, res) => {
   });
   
   // Usuwanie książki po ID
-  app.delete('/api/books/:id', async (req, res) => {
+  app.delete('/api/books/:id', verifyTokenMiddleware, async (req, res) => {
     const { id } = req.params;
     try {
       const book = await Book.findByPk(id);

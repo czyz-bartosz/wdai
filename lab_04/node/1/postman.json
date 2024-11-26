@@ -1,0 +1,94 @@
+{
+    "info": {
+      "name": "API Books Testing",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Get All Books",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/api/books",
+            "host": ["http://localhost"],
+            "port": "3000",
+            "path": ["api", "books"]
+          }
+        }
+      },
+      {
+        "name": "Get Book by ID",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/api/books/:id",
+            "host": ["http://localhost"],
+            "port": "3000",
+            "path": ["api", "books", ":id"],
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "Add New Book",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer YOUR_TOKEN",
+              "type": "text"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"title\": \"The Great Book\",\n  \"author\": \"John Doe\",\n  \"year\": 2024\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3000/api/books",
+            "host": ["http://localhost"],
+            "port": "3000",
+            "path": ["api", "books"]
+          }
+        }
+      },
+      {
+        "name": "Delete Book by ID",
+        "request": {
+          "method": "DELETE",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer YOUR_TOKEN",
+              "type": "text"
+            }
+          ],
+          "url": {
+            "raw": "http://localhost:3000/api/books/:id",
+            "host": ["http://localhost"],
+            "port": "3000",
+            "path": ["api", "books", ":id"],
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+  
