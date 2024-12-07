@@ -1,9 +1,11 @@
 import express from 'express';
 import { Sequelize, DataTypes } from 'sequelize';
+import { URL } from 'url';
 
 const dbName = 'database';
 const port = 3001;
 const authServer = 'http://localhost:3002/api/verify';
+const bookServer = 'http://localhost:3000/api/books';
 
 // Tworzymy połączenie z bazą danych SQLite
 const sequelize = new Sequelize({
@@ -95,12 +97,30 @@ app.get('/api/orders/:userId', async (req, res) => {
   }
 });
 
+async function isThereBook(id) {
+  try {
+    const response = await fetch(bookServer + "/" + id, {
+        method: 'GET'
+    });
+
+    // Sprawdź, czy serwer odpowiedział poprawnie
+    return response.status == 200;
+  } catch (error) {
+      console.error('Błąd:', error.message);
+      return false;
+  }
+}
+
 // Dodawanie zamówienia
 app.post('/api/orders', verifyTokenMiddleware, async (req, res) => {
   const { userId, bookId, quantity } = req.body;
   try {
     // Sprawdzamy, czy bookId i quantity są poprawne
     if (!bookId || !quantity || quantity <= 0) {
+      return res.status(400).json({ error: 'Nieprawidłowe dane wejściowe' });
+    }
+
+    if(!await isThereBook(bookId)) {
       return res.status(400).json({ error: 'Nieprawidłowe dane wejściowe' });
     }
 
